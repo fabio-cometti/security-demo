@@ -5,7 +5,7 @@ project.lock.json
 *.pyc
 nupkg/
 
-# Visual Studio Code
+# Visual Studio Code files
 .vscode
 
 # Rider
