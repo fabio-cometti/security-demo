@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <form asp-controller="Home" asp-action="Index" method="post">
+        <label for="message" class="form-label">HTML message</label>
+        <textarea class="form-control" id="message" name="message">@ViewData["message"]</textarea>
+        <br /><br />
+        <input class="form-check-input" type="checkbox" @((bool)ViewData["showAsRaw"] ? "checked" : "") value="showAsRaw" id="showAsRaw" name="showAsRaw">
+        <label class="form-check-label" for="showAsRaw">
+            Show as raw
+        </label>
+        <br /><br />
+        <input class="form-check-input" type="checkbox" @((bool)ViewData["csp"] ? "checked" : "") value="csp" id="csp" name="csp">
+        <label class="form-check-label" for="csp">
+            Enable CSP
+        </label>
+        <br /><br />
+        <input class="form-check-input" type="checkbox" @((bool)ViewData["nonce"] ? "checked" : "") value="nonce" id="nonce" name="nonce">
+        <label class="form-check-label" for="nonce">
+            Set nonce
+        </label>
+        <br /><br />
+        <button class="btn btn-primary mb-3" type="submit">Send</button>
+    </form>
+
+    <div>
+        Try these snippets:
+        <div>
+            <h5>
+                <xmp><b><i>Bold and italic text</i></b></xmp>
+            </h5>
+            <h5>
+                <xmp><span style="color: red;">Colored text</span></xmp>
+            </h5>
+            <h5>
+                <xmp><span style="color: green;">XSS injection!!!</span><script type="text/javascript">alert('XSS injection!!!');</script></xmp>
+            </h5>
+        </div>
+    </div>
+    <script type="text/javascript" nonce="@((bool)ViewData["nonce"] ? ViewData["nonce-value"] : "")">
+        alert("Hello World, this is a valid Javascript!");
+    </script>
+
+    @if (!string.IsNullOrEmpty("" + ViewData["message"]))
+    {
+        @if ((bool)ViewData["showAsRaw"])
+        {
+            <h1>Raw message</h1>
+            <div>
+                @Html.Raw(ViewData["message"])
+            </div>
+        }
+        else
+        {
+            <h1>Escaped message</h1>
+            <div>
+                @ViewData["message"]
+            </div>
+        }
+    }
+</div>

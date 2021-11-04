@@ -1,0 +1,14 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Welcome to the trasfer money feature</h1>
+    <p>Type the name of the user you want to transfer the money to and the amount to transfer</p>
+    <form asp-controller="Home" asp-action="Transfer" method="post">
+        <label for="username" class="form-label">Username</label>
+        <input class="form-control" type="text" id="username" name="username" />
+        <br /><br />
+        <label class="form-check-label" for="amount">Amount</label>
+        <input class="form-control" type="text" value="0" id="amount" name="amount">
+        @*<input type="hidden" name="xsrf" value="@ViewData["xsrf"]" />*@
+        <br /><br />
+        <button class="btn btn-primary mb-3" type="submit">Transfer</button>
+    </form>
+</div>

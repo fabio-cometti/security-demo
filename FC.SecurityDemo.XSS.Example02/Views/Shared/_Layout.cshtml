@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World without XSS vulnerability</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <h1 class="border">
+        @RenderBody()        
+    </h1>
+    <div>
+        Try to copy these URLs in your address bar and see what happen...
+        <ul>
+            <li>
+                <xmp>https://localhost:44385/?name=Fabio</xmp>
+            </li>
+            <li>
+                <xmp>https://localhost:44385/?name=<style onload="alert('XSS injection!!!');" /></xmp>
+            </li>
+        </ul>
+    </div>    
+</body>
+</html>
