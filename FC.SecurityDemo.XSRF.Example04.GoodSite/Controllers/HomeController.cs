@@ -1,5 +1,6 @@
 ﻿using FC.SecurityDemo.XSRF.Example04.GoodSite.Data;
 using FC.SecurityDemo.XSRF.Example04.GoodSite.Models;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,18 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
 {
     public class HomeController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
+    {        
         private readonly ApplicationDbContext db;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
-        {
-            _logger = logger;
+        public HomeController(ApplicationDbContext db)
+        {            
             this.db = db;            
         }
 
@@ -45,8 +45,8 @@ namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
             //setXSRF();
             var source = await db.Accounts.FirstAsync(acc => acc.UserName == User.Identity.Name);
             var target = await db.Accounts.FirstAsync(acc => acc.UserName == username);
-            source.Credit = source.Credit - amount;
-            target.Credit = target.Credit + amount;
+            source.Credit -= amount;
+            target.Credit += amount;
             await db.SaveChangesAsync();
             return View();
         }
@@ -57,14 +57,14 @@ namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private void setXSRF()
+        private void SetXSRF()
         {
             var xsrf = Guid.NewGuid().ToString("N");
             ViewData["xsrf"] = xsrf;
             Response.Cookies.Append("xsrf", xsrf);
         }
 
-        private void validateXSRF()
+        private void ValidateXSRF()
         {
             try
             {
@@ -73,12 +73,12 @@ namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
                 
                 if(string.IsNullOrEmpty(form) || string.IsNullOrEmpty(cookie) || form != cookie)
                 {
-                    throw new Exception("Form token and cookie token are not the same");
+                    throw new AntiforgeryValidationException("Form token and cookie token are not the same");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("Cannot validate your request!!!");
+                throw new AntiforgeryValidationException("Cannot validate your request!!!");
             }
             
         }

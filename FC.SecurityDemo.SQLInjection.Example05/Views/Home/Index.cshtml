@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <form asp-action="Index" asp-controller="Home" method="post">
+        <input class="form-control" type="text" value="@ViewBag.Filter" name="filter" id="filter" placeholder="cerca..." />
+        <br />
+        <button type="submit" class="btn-primary btn">Filtra</button>
+        <br /><br />
+    </form>
+    <div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in ViewBag.Users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="container text-center">
+        <h6>Executed query: @ViewBag.Query</h6>
+    </div>
+    <br /><br /><br />
+    <div class="container">
+        Try with this filters...
+        <xmp>ali%' UNION SELECT Id,Username,Password from Users;--</xmp>
+        <xmp>ali%'; DROP Table Users;--</xmp>
+    </div>
+</div>
+
+
