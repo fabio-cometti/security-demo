@@ -25,8 +25,8 @@ namespace FC.SecurityDemo.SQLInjection.Example05.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //var result = GetUsers("");
-            var result = GetUsersSafe("");
+            var result = GetUsers("");
+            //var result = GetUsersSafe("");
             ViewBag.Users = result.Users;
             ViewBag.Query = result.Query;
             ViewBag.Filter = "";
@@ -36,8 +36,8 @@ namespace FC.SecurityDemo.SQLInjection.Example05.Controllers
         [HttpPost]
         public IActionResult Index([FromForm]string filter)
         {
-            //var result = GetUsers(filter);
-            var result = GetUsersSafe(filter);
+            var result = GetUsers(filter);
+            //var result = GetUsersSafe(filter);
             ViewBag.Users = result.Users;
             ViewBag.Query = result.Query;
             ViewBag.Filter = filter;
@@ -76,7 +76,7 @@ namespace FC.SecurityDemo.SQLInjection.Example05.Controllers
         {
             List<User> users;
             var connection = db.GetConnection();
-            string where = string.IsNullOrEmpty(filter) ? "" : $"WHERE Username LIKE '%' + @Filter + '%' COLLATE NOCASE";
+            string where = string.IsNullOrEmpty(filter) ? "" : $"WHERE Username LIKE '%' || @Filter || '%' COLLATE NOCASE";
             string query = $"SELECT Id,Username,Email from Users {where};";
 
             using (var command = connection.CreateCommand())

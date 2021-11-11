@@ -32,7 +32,7 @@ namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
         [HttpGet]
         public IActionResult Transfer()
         {
-            //setXSRF();
+            //SetXSRF();
             return View();
         }
 
@@ -41,8 +41,8 @@ namespace FC.SecurityDemo.XSRF.Example04.GoodSite.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Transfer([FromForm]string username, [FromForm]decimal amount)
         {
-            //validateXSRF();
-            //setXSRF();
+            //ValidateXSRF();
+            //SetXSRF();
             var source = await db.Accounts.FirstAsync(acc => acc.UserName == User.Identity.Name);
             var target = await db.Accounts.FirstAsync(acc => acc.UserName == username);
             source.Credit -= amount;
